@@ -19,7 +19,7 @@ namespace user.Controllers
         [HttpGet]
         public IActionResult GetAllUsers()
         {
-            var users = dbContext.Users.ToList();
+            var users = dbContext.UsersPraktikum.ToList();
             return Ok(users);
         }
 
@@ -27,7 +27,7 @@ namespace user.Controllers
         [Route("{id:guid}")]
         public IActionResult GetUsersById(Guid id)
         {
-            var user = dbContext.Users.Find(id);
+            var user = dbContext.UsersPraktikum.Find(id);
             if (user == null) 
             { 
                 return NotFound(); 
@@ -37,7 +37,7 @@ namespace user.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddUser(AddUserDto addUserDto)
+        public IActionResult AddUser(UserDto addUserDto)
         {
             var userEntity =  new User() { 
                 Name = addUserDto.Name,
@@ -45,7 +45,7 @@ namespace user.Controllers
                 Password = addUserDto.Password
             };
 
-            dbContext.Users.Add(userEntity);
+            dbContext.UsersPraktikum.Add(userEntity);
             dbContext.SaveChanges();
 
             return Ok(userEntity);
@@ -53,9 +53,9 @@ namespace user.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        public IActionResult UpdateUser(Guid id, UpdateUserDto updateUserDto)
+        public IActionResult UpdateUser(Guid id, UserDto updateUserDto)
         {
-            var userEntity = dbContext.Users.Find(id);
+            var userEntity = dbContext.UsersPraktikum.Find(id);
             if (userEntity == null) 
             { 
                 return NotFound(); 
@@ -74,13 +74,13 @@ namespace user.Controllers
         [Route("{id:guid}")]
         public IActionResult DeleteUser(Guid id)
         {
-            var userEntity = dbContext.Users.Find(id);
+            var userEntity = dbContext.UsersPraktikum.Find(id);
             if (userEntity == null)
             {
                 return NotFound();
             }
 
-            dbContext.Users.Remove(userEntity);
+            dbContext.UsersPraktikum.Remove(userEntity);
             dbContext.SaveChanges();
 
             return Ok();
