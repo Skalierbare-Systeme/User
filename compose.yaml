@@ -16,9 +16,10 @@ services:
       - 8500:8080
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=server=db;port=3306;database=myapp;user=root;password=Dijar2711#
+      - ConnectionStrings__DefaultConnection=server=user-db;port=3306;database=myapp;user=root;password=Dijar2711#
     depends_on:
-      - user-db
+      user-db:
+        condition: service_healthy
     networks:
       - shared-network
       - user-network 
@@ -28,7 +29,7 @@ services:
       MYSQL_DATABASE: myapp
       MYSQL_ROOT_PASSWORD: Dijar2711#
     ports:
-      - 3307:3306
+      - 8905:3306
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
