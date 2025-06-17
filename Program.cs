@@ -36,8 +36,8 @@ using (var scope = app.Services.CreateScope())
 
 // Configure the HTTP request pipeline.
 
-app.UseHttpsRedirection();
 app.UseCors(MyAllowSpecificOrigins);
+app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
