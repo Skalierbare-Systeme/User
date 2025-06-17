@@ -2,7 +2,7 @@
 using user.Data;
 using user.Models;
 using user.Models.Entities;
-
+using Microsoft.EntityFrameworkCore;
 namespace user.Controllers
 {
     [Route("api/[controller]")]
@@ -11,6 +11,42 @@ namespace user.Controllers
     {
         private readonly ApplicationDbContext dbContext;
 
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        {
+            if (loginDto == null || string.IsNullOrEmpty(loginDto.Email) || string.IsNullOrEmpty(loginDto.Password))
+            {
+                return BadRequest("Email and password are required.");
+            }
+
+            // Find the user by email
+            var user = await dbContext.UsersPraktikum
+                                      .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+
+            if (user == null)
+            {
+                // User not found
+                return Unauthorized("Invalid credentials.");
+            }
+
+            // Check if the password matches
+            if (user.Password != loginDto.Password)
+            {
+                // NOTE: This is a direct comparison. In a real-world application,
+                // you MUST hash passwords for security.
+                return Unauthorized("Invalid credentials.");
+            }
+
+            // Login successful, return user data (without the password)
+            var userResponse = new
+            {
+                user.Id,
+                Name = user.Name,
+                user.Email
+            };
+
+            return Ok(userResponse);
+        }
         public UsersController(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext;
